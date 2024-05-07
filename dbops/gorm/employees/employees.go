@@ -37,7 +37,7 @@ func (e *employeeGormImpl) CreateEmployee(ctx *gin.Context, employee tables.Empl
 
 func (e *employeeGormImpl) GetEmployeeById(ctx *gin.Context, id string) (tables.Employee, error) {
 	var employee tables.Employee
-	err := e.DB.Where("id = ?", id).First(&employee).Error
+	err := e.DB.Where("employee_pid = ?", id).First(&employee).Error
 	return employee, err
 }
 
@@ -48,11 +48,11 @@ func (e *employeeGormImpl) GetAllEmployees(ctx *gin.Context) ([]tables.Employee,
 }
 
 func (e *employeeGormImpl) UpdateEmployee(ctx *gin.Context, id string, employee tables.Employee) (tables.Employee, error) {
-	err := e.DB.Model(&tables.Employee{}).Where("id = ?", id).Updates(employee).Error
+	err := e.DB.Model(&tables.Employee{}).Where("employee_pid = ?", id).Updates(employee).Error
 	return employee, err
 }
 
 func (e *employeeGormImpl) DeleteEmployee(ctx *gin.Context, id string) error {
-	err := e.DB.Where("id = ?", id).Delete(&tables.Employee{}).Error
+	err := e.DB.Where("employee_pid = ?", id).Delete(&tables.Employee{}).Error
 	return err
 }
