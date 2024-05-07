@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/saxenashivang/techiebutler/entities"
+	"github.com/saxenashivang/techiebutler/database/tables"
 	"gorm.io/gorm"
 )
 
@@ -11,11 +11,12 @@ type Migrate struct {
 }
 
 func AutoMigrate(db *gorm.DB) []Migrate {
-	var employee entities.Employee
+	var employees tables.Employee
 
-	employeeM := Migrate{TableName: "employees",
-		Run: func(d *gorm.DB) error { return db.AutoMigrate(&employee) }}
+	employeesM := Migrate{TableName: "employees",
+		Run: func(d *gorm.DB) error { return db.AutoMigrate(&employees) }}
+
 	return []Migrate{
-		employeeM,
+		employeesM,
 	}
 }

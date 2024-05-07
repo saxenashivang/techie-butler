@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/saxenashivang/techiebutler/config"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -33,6 +32,6 @@ func Connection() (*gorm.DB, *sql.DB) {
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	log.Println("[Connection], Connected to DB")
+	log.Println("database connected successfully")
 	return db, sqlDB
 }
