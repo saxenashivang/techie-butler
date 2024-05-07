@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/saxenashivang/techiebutler/database/seeds"
 	"gorm.io/gorm"
 )
 
@@ -10,6 +11,9 @@ type Seed struct {
 }
 
 func Seeder(db *gorm.DB) []Seed {
+	employees := Seed{TableName: "employees", Run: func(d *gorm.DB) error { return seeds.EmployeeSeed(db) }}
 
-	return []Seed{}
+	return []Seed{
+		employees,
+	}
 }
