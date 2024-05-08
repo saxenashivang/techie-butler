@@ -1,5 +1,5 @@
 package constants
 
 const (
-	EmployeeTablePrefix = "EMP"
+	EmployeeTablePrefix = "emp"
 )

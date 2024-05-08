@@ -101,8 +101,9 @@ func (e *employeeSvcImpl) GetAllEmployees(ctx *gin.Context) (utils.BaseResponse,
 }
 
 // UpdateEmployee updates an employee.
-func (e *employeeSvcImpl) UpdateEmployee(ctx *gin.Context, id string, employee tables.Employee) (utils.BaseResponse, tables.Employee, error) {
+func (e *employeeSvcImpl) UpdateEmployee(ctx *gin.Context, req Employee) (utils.BaseResponse, tables.Employee, error) {
 	var baseRes utils.BaseResponse
+	var employee tables.Employee
 	var err error
 
 	// initialize the base response
@@ -112,8 +113,17 @@ func (e *employeeSvcImpl) UpdateEmployee(ctx *gin.Context, id string, employee t
 		Success:    false,
 	}
 
+	if req.Name != "" {
+		employee.Name = req.Name
+	}
+	if req.Position != "" {
+		employee.Position = req.Position
+	}
+	if req.Salary != 0 {
+		employee.Salary = req.Salary
+	}
 	// update employee
-	employee, err = e.employeesGorm.UpdateEmployee(ctx, id, employee)
+	employee, err = e.employeesGorm.UpdateEmployee(ctx, employee.PID, employee)
 	if err != nil {
 		log.Println("unable to update employee", err)
 		baseRes.Message = "unable to update employee"

@@ -16,7 +16,7 @@ type Interface interface {
 	CreateEmployee(ctx *gin.Context, employee CreateEmployeeRequest) (utils.BaseResponse, tables.Employee, error)
 	GetEmployeeById(ctx *gin.Context, id string) (utils.BaseResponse, tables.Employee, error)
 	GetAllEmployees(ctx *gin.Context) (utils.BaseResponse, []tables.Employee, error)
-	UpdateEmployee(ctx *gin.Context, id string, employee tables.Employee) (utils.BaseResponse, tables.Employee, error)
+	UpdateEmployee(ctx *gin.Context, employee Employee) (utils.BaseResponse, tables.Employee, error)
 	DeleteEmployee(ctx *gin.Context, id string) (utils.BaseResponse, error)
 }
 
