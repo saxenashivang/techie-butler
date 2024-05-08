@@ -59,7 +59,7 @@ func TestGetEmployeeById(t *testing.T) {
 	}
 
 	// from seed
-	employeeID := "emp_uewuewiuewiuewiueiw"
+	employeeID := "emp_7cdbb49388904a2cab68d882323d6c40"
 
 	employee, err := gormHandler.GetEmployeeById(c, employeeID)
 	assert.Empty(t, err)
@@ -79,7 +79,7 @@ func TestUpdateEmployee(t *testing.T) {
 	}
 
 	// from seed
-	employeeID := "emp_uewuewiuewiuewiueiw"
+	employeeID := "emp_7cdbb49388904a2cab68d882323d6c40"
 
 	employee, err := gormHandler.GetEmployeeById(c, employeeID)
 	assert.Empty(t, err)
