@@ -1,7 +1,5 @@
 # techie butler
 
-This project implements the core banking layer backend for mool.
-
 <br />
 
 ## List of contents:
