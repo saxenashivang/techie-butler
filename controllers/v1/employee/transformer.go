@@ -2,6 +2,7 @@ package employee
 
 import (
 	"github.com/saxenashivang/techiebutler/database/tables"
+	dbops "github.com/saxenashivang/techiebutler/dbops/gorm"
 	"github.com/saxenashivang/techiebutler/services/employeesvc"
 	"github.com/saxenashivang/techiebutler/utils"
 )
@@ -63,18 +64,25 @@ func updateEmployeeTransformer(baseRes utils.BaseResponse, employee tables.Emplo
 
 }
 
-func getAllEmployeesTransformer(baseRes utils.BaseResponse, employees []tables.Employee) utils.BaseResponse {
+func getAllEmployeesTransformer(baseRes utils.BaseResponse, pagination dbops.Pagination) utils.BaseResponse {
 
 	var res utils.BaseResponse
-	var dataRes []employeesvc.Employee
+	var dataRes employeesvc.GetAllEmployeesResponse
 
-	for _, employee := range employees {
-		var tempRes employeesvc.Employee
-		tempRes.PID = employee.PID
-		tempRes.Name = employee.Name
-		tempRes.Position = employee.Position
-		tempRes.Salary = employee.Salary
-		dataRes = append(dataRes, tempRes)
+	dataRes.Limit = pagination.Limit
+	dataRes.Page = pagination.Page
+	dataRes.Sort = pagination.Sort
+	dataRes.TotalRows = pagination.TotalRows
+	dataRes.TotalPages = pagination.TotalPages
+	dataRes.Employees = make([]employeesvc.Employee, 0)
+
+	for _, employee := range pagination.Rows.([]tables.Employee) {
+		var emp employeesvc.Employee
+		emp.PID = employee.PID
+		emp.Name = employee.Name
+		emp.Position = employee.Position
+		emp.Salary = employee.Salary
+		dataRes.Employees = append(dataRes.Employees, emp)
 	}
 
 	res.StatusCode = baseRes.StatusCode

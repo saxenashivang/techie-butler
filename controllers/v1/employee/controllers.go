@@ -114,8 +114,14 @@ func (c *employeeHandler) DeleteEmployee(ctx *gin.Context) {
 
 // GetEmployees fetches all employees.
 func (c *employeeHandler) GetEmployees(ctx *gin.Context) {
+	// validate request
+	req, err := validateGetEmployeesRequest(ctx)
+	if err != nil {
+		utils.ValidationError(ctx, err)
+		return
+	}
 	// service call
-	baseRes, res, err := c.employeesvc.GetAllEmployees(ctx)
+	baseRes, res, err := c.employeesvc.GetAllEmployees(ctx, req)
 	if err != nil {
 		utils.InternalServer(ctx, err.Error())
 		return

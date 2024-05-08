@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/saxenashivang/techiebutler/constants"
 	"github.com/saxenashivang/techiebutler/database/tables"
+	dbops "github.com/saxenashivang/techiebutler/dbops/gorm"
 	"github.com/saxenashivang/techiebutler/utils"
 	"gorm.io/gorm"
 )
@@ -11,7 +12,7 @@ import (
 type GormInterface interface {
 	CreateEmployee(ctx *gin.Context, employee tables.Employee) (tables.Employee, error)
 	GetEmployeeById(ctx *gin.Context, id string) (tables.Employee, error)
-	GetAllEmployees(ctx *gin.Context) ([]tables.Employee, error)
+	GetAllEmployees(ctx *gin.Context, pagination dbops.Pagination) (dbops.Pagination, error)
 	UpdateEmployee(ctx *gin.Context, id string, employee tables.Employee) (tables.Employee, error)
 	DeleteEmployee(ctx *gin.Context, id string) error
 }
@@ -41,10 +42,11 @@ func (e *employeeGormImpl) GetEmployeeById(ctx *gin.Context, id string) (tables.
 	return employee, err
 }
 
-func (e *employeeGormImpl) GetAllEmployees(ctx *gin.Context) ([]tables.Employee, error) {
+func (e *employeeGormImpl) GetAllEmployees(ctx *gin.Context, pagination dbops.Pagination) (dbops.Pagination, error) {
 	var employees []tables.Employee
-	err := e.DB.Find(&employees).Error
-	return employees, err
+	err := e.DB.Scopes(dbops.Paginate(employees, &pagination, e.DB)).Find(&employees).Error
+	pagination.Rows = employees
+	return pagination, err
 }
 
 func (e *employeeGormImpl) UpdateEmployee(ctx *gin.Context, id string, employee tables.Employee) (tables.Employee, error) {

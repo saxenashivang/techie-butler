@@ -2,10 +2,12 @@ package employee
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/saxenashivang/techiebutler/constants"
 	"github.com/saxenashivang/techiebutler/database"
+	dbops "github.com/saxenashivang/techiebutler/dbops/gorm"
 	"github.com/saxenashivang/techiebutler/dbops/gorm/employees"
 	"github.com/saxenashivang/techiebutler/services/employeesvc"
 	"gorm.io/gorm"
@@ -76,4 +78,29 @@ func validateUpdateEmployeeRequest(ctx *gin.Context) (employeesvc.Employee, erro
 	}
 
 	return reqBody, nil
+}
+
+func validateGetEmployeesRequest(ctx *gin.Context) (dbops.Pagination, error) {
+	var pagination dbops.Pagination
+	var err error
+
+	limit := ctx.DefaultQuery("limit", "10")
+	page := ctx.DefaultQuery("page", "0")
+	sort := ctx.DefaultQuery("sort", "created_at desc")
+
+	limitI, err := strconv.Atoi(limit)
+	if err != nil {
+		return pagination, err
+	}
+
+	pageI, err := strconv.Atoi(page)
+	if err != nil {
+		return pagination, err
+	}
+
+	pagination.Sort = sort
+	pagination.Limit = limitI
+	pagination.Page = pageI
+
+	return pagination, err
 }

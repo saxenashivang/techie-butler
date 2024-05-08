@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/saxenashivang/techiebutler/database/tables"
+	"github.com/saxenashivang/techiebutler/dbops/gorm"
 	"github.com/saxenashivang/techiebutler/utils"
 )
 
@@ -72,10 +73,9 @@ func (e *employeeSvcImpl) GetEmployeeById(ctx *gin.Context, id string) (utils.Ba
 }
 
 // GetAllEmployees fetches all employees.
-func (e *employeeSvcImpl) GetAllEmployees(ctx *gin.Context) (utils.BaseResponse, []tables.Employee, error) {
+func (e *employeeSvcImpl) GetAllEmployees(ctx *gin.Context, pagination gorm.Pagination) (utils.BaseResponse, gorm.Pagination, error) {
 	var baseRes utils.BaseResponse
 	var err error
-	var employees []tables.Employee
 
 	// initialize the base response
 	baseRes = utils.BaseResponse{
@@ -85,11 +85,12 @@ func (e *employeeSvcImpl) GetAllEmployees(ctx *gin.Context) (utils.BaseResponse,
 	}
 
 	// get all employees
-	employees, err = e.employeesGorm.GetAllEmployees(ctx)
+
+	pagination, err = e.employeesGorm.GetAllEmployees(ctx, pagination)
 	if err != nil {
 		log.Println("unable to fetch employees", err)
 		baseRes.Message = "unable to fetch employees"
-		return baseRes, employees, err
+		return baseRes, pagination, err
 	}
 
 	// set the base response
@@ -97,7 +98,7 @@ func (e *employeeSvcImpl) GetAllEmployees(ctx *gin.Context) (utils.BaseResponse,
 	baseRes.Message = "Employees fetched successfully"
 	baseRes.Success = true
 
-	return baseRes, employees, nil
+	return baseRes, pagination, nil
 }
 
 // UpdateEmployee updates an employee.
@@ -122,6 +123,7 @@ func (e *employeeSvcImpl) UpdateEmployee(ctx *gin.Context, req Employee) (utils.
 	if req.Salary != 0 {
 		employee.Salary = req.Salary
 	}
+	employee.PID = req.PID
 	// update employee
 	employee, err = e.employeesGorm.UpdateEmployee(ctx, employee.PID, employee)
 	if err != nil {
